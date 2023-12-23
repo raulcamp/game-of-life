@@ -1,11 +1,6 @@
+"""Game of Life"""
 import sys
-from dataclasses import dataclass, field
-import random
 import pygame
-
-
-# pylint: disable=no-member
-# pygame.init()
 
 # Dimensions
 WIDTH, HEIGHT = 1000, 1000
@@ -24,22 +19,13 @@ ORANGE = (240, 160, 0)
 PURPLE = (160, 0, 240)
 
 
-@dataclass
-class Object:
-    """Represents an object"""
-    x: int
-    y: int
-    width: int
-    height: int
-    color: tuple
-
 class Game:
     """Represents a game"""
     def __init__(self):
         pass
-    
+
     def draw(self, screen):
-        pass
+        """Draw the grid and the current objects"""
 
 
 def main():
@@ -51,8 +37,7 @@ def main():
     clock = pygame.time.Clock()
     # Create a Game object
     game = Game()
-    
-    crouching = False
+
     while True:
         # Fill the background
         screen.fill(BLACK)
