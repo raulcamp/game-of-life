@@ -1,31 +1,47 @@
 """Game of Life"""
 import sys
 import pygame
-
-# Dimensions
-WIDTH, HEIGHT = 1000, 1000
-GRID_SIZE = 25
-
-# Colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GRAY = (50, 50, 50)
-RED = (240, 0, 0)
-BLUE = (0, 0, 240)
-CYAN = (0, 240, 240)
-GREEN = (0, 240, 0)
-YELLOW = (240, 240, 0)
-ORANGE = (240, 160, 0)
-PURPLE = (160, 0, 240)
+from entities import Cell
+from constants import (
+    WIDTH,
+    HEIGHT,
+    GRID_SIZE,
+    GRAY,
+    WHITE,
+    BLACK,
+)
 
 
 class Game:
     """Represents a game"""
-    def __init__(self):
-        pass
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.cells = [  # TODO: add input for initialization cells
+            Cell(self.width // 2, self.height // 2, GRID_SIZE, WHITE),
+            Cell(self.width // 2 + 1, self.height // 2, GRID_SIZE, WHITE),
+            Cell(self.width // 2 + 1, self.height // 2 + 1, GRID_SIZE, WHITE),
+            Cell(self.width // 2 - 1, self.height // 2 - 1, GRID_SIZE, WHITE),
+        ]
 
     def draw(self, screen):
-        """Draw the grid and the current objects"""
+        """Draw the current game objects"""
+        for cell in self.cells:
+            draw_rect(screen, cell)
+
+
+def draw_rect(screen, obj):
+    """Draws a Pygame rectangle"""
+    x, y, size = (obj.x * obj.size) + 1, (obj.y * obj.size) + 1, obj.size - 1
+    pygame.draw.rect(screen, obj.color, (x, y, size, size))
+
+
+def draw_grid(screen):
+    """Draws a grid"""
+    for x in range(0, WIDTH, GRID_SIZE):
+        pygame.draw.line(screen, GRAY, (x, 0), (x, HEIGHT))
+    for y in range(0, HEIGHT, GRID_SIZE):
+        pygame.draw.line(screen, GRAY, (0, y), (WIDTH, y))
 
 
 def main():
@@ -36,11 +52,12 @@ def main():
     # Create a clock object
     clock = pygame.time.Clock()
     # Create a Game object
-    game = Game()
+    game = Game(WIDTH // GRID_SIZE, HEIGHT // GRID_SIZE)
 
     while True:
         # Fill the background
         screen.fill(BLACK)
+        draw_grid(screen)
 
         for event in pygame.event.get():
             # Check for the QUIT event
