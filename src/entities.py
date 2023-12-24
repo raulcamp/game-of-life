@@ -10,6 +10,7 @@ class Object:
     width: int
     height: int
     color: tuple
+# TODO: Implement a Point object
 
 
 @dataclass
@@ -19,6 +20,10 @@ class Cell:
     y: int
     size: int
     color: tuple
+
+    def get_pos(self):
+        """Returns the coordinate of the cell"""
+        return self.x, self.y
 
 
 if __name__ == "__main__":
