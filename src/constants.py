@@ -1,7 +1,7 @@
 """Game of Life constants"""
 # Dimensions
 WIDTH, HEIGHT = 1000, 1000
-GRID_SIZE = 25
+GRID_SIZE = 20
 
 # Colors
 WHITE = (255, 255, 255)
