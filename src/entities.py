@@ -1,5 +1,5 @@
 """Game of Life entities, objects, and classes"""
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -10,3 +10,16 @@ class Object:
     width: int
     height: int
     color: tuple
+
+
+@dataclass
+class Cell:
+    """Represents a cell"""
+    x: int
+    y: int
+    size: int
+    color: tuple
+
+
+if __name__ == "__main__":
+    pass
