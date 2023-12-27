@@ -7,6 +7,7 @@ from constants import (
     HEIGHT,
     GRID_SIZE,
     GRAY,
+    LIGHTGRAY,
     WHITE,
     BLACK,
 )
@@ -47,6 +48,17 @@ class Game:
     def add_cell(self, x, y):
         """Add a new cell"""
         self.cells.append(Cell(x, y, GRID_SIZE, WHITE))
+
+    def del_cell(self, x, y):
+        """Remove a cell if it exists"""
+        to_remove = None
+        for i, cell in enumerate(self.cells):
+            if (x, y) == cell.get_pos():
+                to_remove = i
+        if to_remove is not None:
+            self.cells.remove(self.cells[to_remove])
+            return True
+        return False
 
     def is_cell(self, x, y):
         """Checks if a cell already exists"""
@@ -137,17 +149,19 @@ def main():
 
                 screen.fill(BLACK)
                 draw_grid(screen)
-                pygame.draw.rect(screen, GRAY, (x, y, size, size))
+                pygame.draw.rect(screen, LIGHTGRAY, (x, y, size, size))
                 game.draw(screen)
                 pygame.display.update()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 x, y = x // GRID_SIZE, y // GRID_SIZE
-                if not game.is_cell(x, y):
+                if game.is_cell(x, y):
+                    game.del_cell(x, y)
+                else:
                     game.add_cell(x, y)
-                    game.draw(screen)
-                    pygame.display.update()
+                game.draw(screen)
+                pygame.display.update()
 
         # Check for key presses
         keys = pygame.key.get_pressed()
