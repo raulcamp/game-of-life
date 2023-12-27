@@ -17,13 +17,7 @@ class Game:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.cells = [  # TODO: add input for initialization cells
-            Cell(self.width // 2, self.height // 2, GRID_SIZE, WHITE),
-            Cell(self.width // 2 + 1, self.height // 2 + 1, GRID_SIZE, WHITE),
-            Cell(self.width // 2 + 1, self.height // 2 + 2, GRID_SIZE, WHITE),
-            Cell(self.width // 2, self.height // 2 + 2, GRID_SIZE, WHITE),
-            Cell(self.width // 2 - 1, self.height // 2 + 2, GRID_SIZE, WHITE),
-        ]
+        self.cells = []
 
     def update(self):
         """Update the cells in the game"""
@@ -49,6 +43,17 @@ class Game:
                 self.cells.remove(cell)
         for x, y in births:
             self.cells.append(Cell(x, y, GRID_SIZE, WHITE))
+
+    def add_cell(self, x, y):
+        """Add a new cell"""
+        self.cells.append(Cell(x, y, GRID_SIZE, WHITE))
+
+    def is_cell(self, x, y):
+        """Checks if a cell already exists"""
+        for cell in self.cells:
+            if (x, y) == cell.get_pos():
+                return True
+        return False
 
     def draw(self, screen):
         """Draw the current game objects"""
@@ -100,7 +105,7 @@ def draw_grid(screen):
 
 
 def main():
-    """Runs the game"""
+    """Initializes and runs the game"""
     # Initialize pygame
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Game')
@@ -110,6 +115,53 @@ def main():
     game = Game(WIDTH // GRID_SIZE, HEIGHT // GRID_SIZE)
 
     fps = 10
+    selecting = True
+
+    # Fill the background
+    screen.fill(BLACK)
+    draw_grid(screen)
+    pygame.display.update()
+    while selecting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    selecting = False
+            if event.type == pygame.MOUSEMOTION:
+                x, y = event.pos
+                x = (x // GRID_SIZE) * GRID_SIZE
+                y = (y // GRID_SIZE) * GRID_SIZE
+                size = GRID_SIZE
+
+                screen.fill(BLACK)
+                draw_grid(screen)
+                pygame.draw.rect(screen, GRAY, (x, y, size, size))
+                game.draw(screen)
+                pygame.display.update()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                x, y = x // GRID_SIZE, y // GRID_SIZE
+                if not game.is_cell(x, y):
+                    game.add_cell(x, y)
+                    game.draw(screen)
+                    pygame.display.update()
+
+        # Check for key presses
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            pass
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            pass
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            pass
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            pass
+
+        # Set the framerate
+        clock.tick(60)
 
     while True:
         # Fill the background
@@ -124,9 +176,9 @@ def main():
             # Check for the KEYDOWN event
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    fps = min((fps+1, 60))
+                    pass
                 if event.key == pygame.K_LEFT:
-                    fps = max((fps-1, 1))
+                    pass
             if event.type == pygame.KEYUP:
                 pass
 
@@ -137,9 +189,9 @@ def main():
         # Check for key presses
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            pass
+            fps = max((fps-1, 1))
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            pass
+            fps = min((fps+1, 60))
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             pass
         if keys[pygame.K_UP] or keys[pygame.K_w]:
@@ -150,7 +202,7 @@ def main():
         # Update the game state
         game.update()
         # Update the display
-        pygame.display.flip()
+        pygame.display.update()
         # Set the framerate
         clock.tick(fps)
 
