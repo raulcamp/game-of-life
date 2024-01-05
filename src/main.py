@@ -2,6 +2,10 @@
 import sys
 import pygame
 from entities import Cell
+from presets import (
+    GLIDER,
+    GOSPER_GUN,
+)
 from constants import (
     WIDTH,
     HEIGHT,
@@ -59,6 +63,17 @@ class Game:
             self.cells.remove(self.cells[to_remove])
             return True
         return False
+
+    def add_preset(self, preset):
+        """Adds cells of a preset"""
+        min_x, max_x = min(preset)[0], max(preset)[0]
+        min_y, max_y = min(preset)[1], max(preset)[1]
+        avg_x, avg_y = (max_x - min_x) // 2, (max_y - min_y) // 2
+        dx = (WIDTH // GRID_SIZE) // 2 - avg_x
+        dy = (HEIGHT // GRID_SIZE) // 2 - avg_y
+        for x, y in preset:
+            print(x + dx,  y + dy)
+            self.add_cell(x + dx, y + dy)
 
     def is_cell(self, x, y):
         """Checks if a cell already exists"""
@@ -141,6 +156,14 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     selecting = False
+                if event.key == pygame.K_1:
+                    game.add_preset(GLIDER)
+                    game.draw(screen)
+                    pygame.display.update()
+                if event.key == pygame.K_2:
+                    game.add_preset(GOSPER_GUN)
+                    game.draw(screen)
+                    pygame.display.update()
             if event.type == pygame.MOUSEMOTION:
                 x, y = event.pos
                 x = (x // GRID_SIZE) * GRID_SIZE
